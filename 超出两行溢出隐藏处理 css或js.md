@@ -1,19 +1,22 @@
 #### 纯css处理：
 
-`overflow: hidden;
+```javascript
+overflow: hidden;
 text-overflow: ellipsis;
 display: -webkit-box;
  -webkit-line-clamp: 2;
 /*! autoprefixer: off */
  -webkit-box-orient: vertical;
  /* autoprefixer: on */
-word-break: break-all;`
+word-break: break-all;
+```
 
 
 
 #### react hook写法处理：
 
-` useEffect(()*=>*{
+```javascript
+useEffect(()*=>*{
 
   *let* dom = document.querySelector('文本盒子的class或id')
 
@@ -53,4 +56,5 @@ word-break: break-all;`
 
   }
 
- }, [文本变量：description])`
+ }, [文本变量：description])
+ ```
