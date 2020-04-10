@@ -1,0 +1,11 @@
+### 上传大文件：
+
+将文件进行切割，先let file = new formData, file.append('File', 文件类型Blob]])转成Blob格式，再使用slice方法分成多等分，
+
+### 上传失败的情况下，前端如何处理继续上传的情况？
+
+请求后端已经上传了文件的大小，然后使用blob对象的slice方法进行切割，切割掉已经上传的部分，继续上传
+
+### 前端使用axios显示进度：
+
+axios存在onUploadProgress/onDownloadProgress的方法，可以获取到进度
