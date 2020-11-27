@@ -11,7 +11,6 @@
 defineproperty是通过监听对象中已存在的属性进行双向绑定的，这样对象需要绑定新的属性时，会出现无法监听的情况。需要使用$set 。手动绑定新增的属性进行监听。
 
 ```javascript
-
 function observe(obj, callback) {
     const newObj = {}
     Object.keys(obj).forEach(key => {
@@ -53,7 +52,6 @@ obj.user = 'zzf'
 而proxy则是监听整个对象进行双向绑定的，即使你新增属性也完全可以监听。
 
 ```javascript
-
 function observe(obj, callback) {
 	return new Proxy(obj, {
         get(target, key) {
@@ -117,7 +115,7 @@ watchEffect
 
 ##### **生命周期为以下几个阶段：**(顺便列了一下vue2、React 类组件的生命周期进行对比)
 
-| Vue2          | Vue3            | React                      |
+| Vue2          | Vue3            | React  class component     |
 | ------------- | --------------- | -------------------------- |
 | beforeCreate  | setup           | class Component constuctor |
 | created       | setup           | constuctor                 |
@@ -131,7 +129,6 @@ watchEffect
 **Vue3中，使用对应的生命周期钩子必须要先import进来才能使用。**
 
 ```
-
 <template>
   <div id="app"></div>
 </template>
@@ -354,7 +351,21 @@ export default {
 
 
 
+#### 对比react优化
 
+说到优化，我们知道vue框架本身就已经帮我们做了很多优化，我们使用者基本也不用再去优化了，已经是按需更新视图了。但react并不，用过react的朋友应该知道有一个钩子： `shouldComponentUpdate(nextProps, nextState)` ，这个方法就是专门用来做性能优化的。当然只适用与class类组件的写法。
+
+使用这个方法，必须要有返回值，否则不会去更新视图，但还是会渲染。return true的时候才去更新视图，false则什么也不干。一般都会在这个方法里面进行判断，获取到最新的值跟上一次我们的this.state或者props 的值是否相等，相等则不更新，否则更新。
+
+
+
+##### 那么对于hook写法，也就是函数式组件的朋友，没有`shouldComponentUpdate` 这个方法，怎么去优化的呢？
+
+hook写法常用的几个方法：useState、useReducer、useRef、useEffect、useCallback、useMemo。后面三个都有两个参数，第一个参数是函数，第二个参数是依赖项。依赖哪个变量，那么就只有这个依赖项改变的时候，才会去重新更新依赖项的值。否则每次调用都是初始化的值。特别是使用useCallback要特别注意。所以我们可以了解，hook写法的性能优化是对于依赖项的处理。
+
+
+
+##### **react是使用者手动根据业务逻辑来进行优化。**
 
 
 
@@ -375,7 +386,6 @@ vue使用flow做静态类型检查，之所以选择flow，主要是因为Babel�
 **类型注释**：事先注释我们期待的类型，Flow会基于这些注释来判断。
 
 待完善......
-
 
 
 
