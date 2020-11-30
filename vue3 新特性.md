@@ -113,7 +113,7 @@ watchEffect
 
 
 
-**生命周期为以下几个阶段：**(顺便列了一下vue2、React 类组件的生命周期进行对比)
+##### **生命周期为以下几个阶段：**(顺便列了一下vue2、React 类组件的生命周期进行对比)
 
 | Vue2          | Vue3            | React  class component     |
 | ------------- | --------------- | -------------------------- |
@@ -227,24 +227,24 @@ export default {
 
 从上面这个例子，我们可以得出他们之间的区别是什么了。
 
-**总结一下：**
+##### **总结一下：**
 
 1. `ref` 是对传入数据的拷贝；`toRef` 是对传入数据的引用
 2. `ref` 的值改变会更新视图，不影响初始值；`toRef` 的值改变不会更新视图，改变初始值
 
 
 
-**这里对toRef引发一个思考，toRef和定义一个变量有什么不一样？**
+#### **这里对toRef引发一个思考，toRef和定义一个变量有什么不一样？**
 
 
 
 **toRefs**：是将一个对象中的全部属性转为响应式对象。参数只有一个，即需转换的对象obj。
 
-**引发思考：**toRefs与reactive 有什么区别？区别仅仅只是参数的限制吗？
+#### **引发思考：**toRefs与reactive 有什么区别？区别仅仅只是参数的限制吗？
 
 
 
-**那么react的ref又是怎么样去获取的呢？**
+#### **那么react的ref又是怎么样去获取的呢？**
 
 我们知道react有两种写法，一种是函数式组件、一种是class类组件。函数式组件通过使用useRef来定义一个ref对象，而class类组件是通过createRef来创建的，然后在组件上使用ref属性，将创建的ref对象赋值给它。
 
@@ -365,7 +365,71 @@ hook写法常用的几个方法：useState、useReducer、useRef、useEffect、u
 
 
 
-**react是使用者手动根据业务逻辑来进行优化。**
+##### **react是使用者手动根据业务逻辑来进行优化。**
+
+
+
+#### eventBus
+
+最后来说一个vue事件总线（eventBus），相信大部分vue的使用者都用过。
+
+**可全局，多组件之间的通信。**
+
+回顾下 vue2 中定义eventBus。
+
+```
+1、bus.js文件
+import Vue from 'vue';
+export defalut Vue;
+
+2、组件中使用
+import bus from './bus'
+
+bus.emit('function')
+
+bus.on('function', ()=>{})
+```
+
+**那在 vue3 中，我们怎么去定义一个eventBus呢？**
+
+
+
+首先我们要在入口文件中，引入mitt库（一个功能事件的订阅发布器）绑定在window对象上，然后直接在组件中使用。
+
+```
+1、在main.js中引入mitt
+import { createApp } from 'vue';
+import mitt from 'mitt';
+import App from './App';
+import router from './router';
+
+const app = createApp(App);
+window.mitt = mitt();
+
+app.use(router).mount('#app');
+
+2、组件中直接使用
+window.emit('function')
+window.on('function', ()=>{})
+
+```
+
+当然，你也可以类似之前vue2这样定义bus.js文件：
+
+```
+1、定义一个bus.js文件
+import mitt from 'mitt';
+export default mitt();
+
+2、组件中使用，先引入bus.js文件
+import bus from './bus'
+
+bus.emit('function')
+
+bus.on('function', ()=>{})
+```
+
+两种方式看大家的编程习惯去选择。
 
 
 
