@@ -277,6 +277,67 @@ React.forwardRef((prop, ref)=>{
 
 
 
+#### watchEffect
+
+我们之前有用过watch监听事件，`watch( source, cb, [options] )` 
+
+**source**：监听依赖的对象，可以是表达式，或者函数，如果不传默认获取全部的响应式对象
+
+**cb：**依赖对象发生变化后执行的函数
+
+**options：**可配置属性， immediate（立即触发回调函数）、deep（深度监听）
+
+它的用法如下：
+
+```
+1、监听ref值：
+const refDom = ref(0)
+watch(refDom, (newVal, oldVal)=>{})
+
+2、监听reactive值：
+const state = reactive({
+    count: 0，
+    name: 'asd'
+})
+watch(()=>state.count, (newVal, oldVal)=>{})
+
+3、监听多个值：
+watch([()=>state.count, ()=>state.name], (newVal, oldVal)=>{})
+
+4、当然watch也可以监听全部对象
+watch(()=>{})
+```
+
+了解完watch，我们看一下watchEffect这个方法，如何使用。
+
+
+
+`watchEffect（cb）` 只接受一个参数，即触发执行的函数。
+
+**watchEffect 只能获取到最新的值，获取不到原值，同时不需要手动配置依赖对象。**
+
+```
+const refDom = ref(0)
+const state = reactive({
+    count: 0,
+    name: ''
+})
+
+watchEffect(()=>{
+	console.log(refDom.value, state.count, state.name)
+})
+```
+
+
+
+**watch和watchEffect，都返回了一个取消监听的函数。**
+
+```
+const stop = watch(()=>{})
+const stop = watchEffect(()=>{})
+stop()
+```
+
 
 
 
@@ -286,8 +347,6 @@ React.forwardRef((prop, ref)=>{
 shallowReactive，乍一看应该是和reactive差不多的，shallow 意思是浅的意思，那么从字面意思就是：浅层的监听对象。
 
 **shallowReactive**：如果一个对象有多层级，那么这个方法只会监听第一层的属性，改变了则立即更新视图，否则即使其他层级的数据改变了，也不会进行视图更新。
-
-
 
 **shallowRef**：`shallowReactive` 是监听对象第一层的数据变化用于驱动视图更新，那么 `shallowRef` 则是监听 `.value` 的值的变化来更新视图的。
 
@@ -366,6 +425,10 @@ hook写法常用的几个方法：useState、useReducer、useRef、useEffect、u
 
 
 ##### **react是使用者手动根据业务逻辑来进行优化。**
+
+
+
+
 
 
 
