@@ -1,0 +1,103 @@
+#### 拖动选择
+
+##### 实现方式：    
+
+1、使用插件的文档 https://gitee.com/ovsexia/DragSelect-Doc-Cn/tree/master  
+
+2、选择npm install的方法
+
+3、在vue的项目下，使用demo如下：
+
+```vue
+<template>
+    <div>
+        <div id="ul"
+             class="ul">
+            <div v-for="item in 25"
+                 :key="item"
+                 class="li"
+                 :class="item=== 5 ? 'disabled' : ''">
+                {{ item }}
+            </div>
+        </div>
+        <div v-if="selectVal.length > 0"
+             class="select-cont">
+            <h4>已选内容：</h4>
+            <span v-for="item in selectVal"
+                  :key="item">
+                {{ item }}、
+            </span>
+        </div>
+    </div>
+</template>
+
+<script>
+import Dragselect from 'dragselect';
+
+export default {
+    data() {
+        return {
+            allSelectElement: [],
+        };
+    },
+    computed: {
+        selectVal() {
+            return this.allSelectElement.map(item => item.innerText);
+        },
+    },
+    mounted() {
+        this.init();
+    },
+    methods: {
+        init() {
+            const This = this;
+            const ds = new Dragselect({
+                area: document.getElementById('ul'),
+                selectables: document.getElementsByClassName('li'),
+                multiSelectMode: true,
+                // 选中
+                onElementSelect(element) {
+                    element.classList.add('on');
+                },
+                // 取消选中
+                onElementUnselect(element) {
+                    element.classList.remove('on');
+                },
+                // 鼠标抬起后返回所有选中的元素
+                callback(elements) {
+                    const res = elements.filter(item => !item.classList.contains('disabled'));
+                    This.allSelectElement = res;
+                },
+            });
+            return ds;
+        },
+    },
+};
+</script>
+
+<style>
+.ul {
+    background-color: #ccc;
+    padding: 40px 35px;
+    user-select: none;
+}
+.li {
+    width: 50px;
+    height: 50px;
+    margin: 20px;
+    display: inline-block;
+    background-color: #fff;
+}
+.li.on {
+    background-color: #4892db;
+}
+.li.disabled {
+    background-color: #999;
+}
+.select-cont {
+  padding: 20px 60px;
+}
+</style>
+
+```
+
