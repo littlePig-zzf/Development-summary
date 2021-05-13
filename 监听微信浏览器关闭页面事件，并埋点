@@ -1,0 +1,49 @@
+**监听pageHide事件** （目前，*点击页面关闭按钮、左滑关闭页面事件、使用window.href跳转都会触发*）
+
+ios返回上一页的底部导航栏没有办法触发，除非两个页面都是window.location跳转的页面，就会触发。
+
+
+
+**但是由于浏览器的限制，关闭页面会阻断接口请求，因此关闭埋点则分设备来判断：**
+
+**ios设备使用navigator.sendBeacon 发起埋点请求，但不支持传token。**
+
+**安卓设备使用ajax发送请求即可。**
+
+```javascript
+//checkSystemType 获取设备类型：ios 安卓
+  
+export function checkSystemType() {
+    const u = navigator.userAgent;
+    const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; // g
+    const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+    if (isAndroid) {
+        // 这个是安卓操作系统
+        return 'android';
+    }
+    if (isIOS) {
+        // 这个是ios操作系统
+        return 'ios';
+    }
+    return '未知';
+}
+ 
+const requestUrl = Config.gatewayUrl + '/api/pi-point-service/point/collect';
+if (checkSystemType() === 'ios') {
+    var blob = new Blob([params], { type: 'application/json; charset=UTF-8' }); // the blob
+    navigator && navigator.sendBeacon(requestUrl, blob);
+} else {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            var responseValue = xmlHttp.responseText;
+        }
+    };
+    //true：异步；false：同步
+    xmlHttp.open('POST', requestUrl, false);
+    xmlHttp.setRequestHeader('Content-Type', 'application/json');
+    xmlHttp.setRequestHeader('token', localStorage.getItem('token'));
+    xmlHttp.send(params);
+}
+```
+
