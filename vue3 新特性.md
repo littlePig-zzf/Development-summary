@@ -4,6 +4,8 @@
 
 2、组合composition API
 
+3、css中可以使用变量
+
 
 
 ##### 为什么要改成proxy?
@@ -503,6 +505,93 @@ bus.on('function', ()=>{})
 两种方式看大家的编程习惯去选择。
 
 
+
+#### css中使用变量
+
+tips: 为什么要使用 --开头呢？因为 @ 被less使用了，$ 被scss使用了。所以官方就决定使用 -- 来定义变量。
+
+```vue
+<template>
+  <div class="text">hello</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      color: "red",
+    };
+  },
+};
+</script>
+
+<style vars="{ color }">
+.text {
+  color: var(--color);
+}
+.parent {
+	--parent-color: blue;
+}
+.child {
+    color: var(--parent-color);
+    // 访问全局的变量css
+    font-size: var(--global:fontSize);
+}
+</style>
+```
+
+
+
+#### vue3 使用router,，对比vue2引入router的方式
+
+```
+//vue2
+
+import Vue from 'vue';
+import router from './router';
+import store from './store'; //vuex
+import App from './App.vue';
+
+new Vue({
+    router,
+    store,
+    render: (h) => h(App),
+}).$mount('#app');
+
+
+//vue3
+
+import { createApp, getCurrentInstance } from 'vue'
+import App from './App.vue'
+import router from './router/index'
+
+const app = createApp(App)
+
+//定义全局的过滤器--组件中通过一下三个步骤
+
+//1、import getCurrentInstance from 'vue'
+//2、const {proxy} = getCurrentInstance()
+//3、proxy.$filters.自定义方法() 即可
+
+app.config.globalProperties.$filters = {
+	...自定义方法
+	例如：
+	 prefix(url) {
+        if (url && url.startsWith('http')) {
+          return url
+        } else {
+          url = `http://backend-api-02.newbee.ltd${url}`
+          return url
+        }
+      },
+}
+
+
+app.use(router)
+app.mount('#app')
+
+
+```
 
 
 
