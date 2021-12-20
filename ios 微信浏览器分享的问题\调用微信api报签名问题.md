@@ -6,13 +6,13 @@
 
 
 
-**背景：**在ios系统下，单页面系统 通过pushState、replaceState跳转页面的，地址栏的地址不会改变，一直都是初始化进来的页面地址。
+**背景**：在ios系统下，单页面系统 通过pushState、replaceState跳转页面的，地址栏的地址不会改变，一直都是初始化进来的页面地址。
 
 但是不是全部ios系统都这样，估计看ios版本，微信版本。
 
 
 
-**原因：**ios部分手机，微信浏览器并不兼容pushState、replaceState的html5方法，因此在地址栏并没有更新url。 
+**原因**：ios部分手机，微信浏览器并不兼容pushState、replaceState的html5方法，因此在地址栏并没有更新url。 
 
 
 
