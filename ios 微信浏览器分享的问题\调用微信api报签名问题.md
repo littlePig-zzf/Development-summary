@@ -28,14 +28,14 @@
 
 **解决方案：**
 
-1、监听路由，在路由钩子进行页面刷新，使用location.assign(当前页面)、location.replace(当前页面)，刷新页面url。（完胜的一种方法，location.replace）
+1、监听路由，在路由钩子进行页面刷新，使用window.history.replaceState(null, document.title, 刷新的地址)，刷新页面url。
 
 ```
  beforeRouteEnter: ((to, from, next) => {
        if (!to.query.indexRefresh) {
             let refreshPath = '';
             refreshPath = to.fullPath.indexOf('?') === -1 ? '?indexRefresh=1' : '&indexRefresh=1';
-            location.replace(`${to.fullPath}${refreshPath}`)
+            window.history.replaceState(`${to.fullPath}${refreshPath}`)
         }
  }
 
